@@ -6,20 +6,21 @@
 #include "../include/sandpile.h"
 #include "../include/bmp.h"
 
-//сoхранения bmp для текущего состояния
+// Save BMP for the current state
 void saveBMP(const Sandpile& model, const char* filename, int color0, int color1, int color2, int color3, int color4) {
     int width = model.getWidth();
     int height = model.getHeight();
-    uint8_t** pixelMatrix = model.getPixelMatrix(color0, color1, color2, color3, color4);//1-массив указателей, 2-каждый указатель указывает на строки в массиве
+    uint8_t** pixelMatrix = model.getPixelMatrix(color0, color1, color2, color3, color4); // 1-array of pointers, 2-each pointer points to rows in the array
 
     writeInBMPFile(filename, width, height, pixelMatrix);
 
     for (int i = 0; i < height; ++i) {
-        delete[] pixelMatrix[i];//освобождение строк
+        delete[] pixelMatrix[i]; // Free rows
     }
-    delete[] pixelMatrix; //освобождение массива указателей
+    delete[] pixelMatrix; // Free array of pointers
 }
 
+// Get color index from string
 int getColor(const char* color) {
     int colorInt = -1;
     if (strcmp(color, "white") == 0) {
@@ -58,6 +59,7 @@ int getColor(const char* color) {
     return colorInt;
 }
 
+// Check if color is in the list of allowed colors
 bool isInColors(const char* color, const char* allColors[]) {
     bool isFound = false;
     for (int i = 0; i < 16; i++) {
@@ -81,8 +83,7 @@ int main(int argc, char* argv[]) {
     const char* colorThree = "yellow";
     const char* colorFour = "black";
 
-
-    //парсинг аргументов командной строки
+    // Parse command line arguments
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-i") == 0 || strcmp(argv[i], "--input") == 0) {
             inputFile = argv[++i];
@@ -104,26 +105,26 @@ int main(int argc, char* argv[]) {
         } else if (strcmp(argv[i], "-c4") == 0 || strcmp(argv[i], "--color4") == 0) {
             colorFour =  argv[++i];
         } else {
-            std::cerr << "Ошибка! Неправильно заданы входные данные!" << std::endl;
+            std::cerr << "Error! Incorrect input parameters!" << std::endl;
             return 1;
         }
     }
 
     if (usersOutputDir == nullptr) {
-        std::cerr << "Ошибка! Выходная директория не задана!" << std::endl;
+        std::cerr << "Error! Output directory not specified!" << std::endl;
         return 1; 
     } else if (inputFile == nullptr) {
-        std::cerr << "Ошибка! Входной файл не задан!" << std::endl;
+        std::cerr << "Error! Input file not specified!" << std::endl;
         return 1; 
     } else if (freq == -1) {
-        std::cerr << "Ошибка! Некорректно заданы входные данные! Проверьте, задали ли Вы частоту сохранения картинок!" << std::endl;
+        std::cerr << "Error! Incorrect input parameters! Check if the frequency of saving images is specified!" << std::endl;
         return 1; 
     }
 
     const char* allColors[16] = {"white", "green", "purple", "yellow", "black", "maroon", "pink", "red", "orange", "beige", "grey", "violet", "cyan", "blue", "navy", "lime"};
 
     if (!(isInColors(colorZero, allColors) && isInColors(colorOne, allColors) && isInColors(colorTwo, allColors) && isInColors(colorThree, allColors) && isInColors(colorFour, allColors))) {
-        std::cerr << "Ошибка! Некорректно заданы входные данные! Проверьте, правильно ли вы написали названия цветов!" << std::endl;
+        std::cerr << "Error! Incorrect input parameters! Check if the color names are spelled correctly!" << std::endl;
         return 1;
     }
 
@@ -133,8 +134,7 @@ int main(int argc, char* argv[]) {
     int color3 = getColor(colorThree);
     int color4 = getColor(colorFour);
 
-
-    //проверка существования базовой выходной директории
+    // Check existence of base output directory
     struct stat info;
     char baseOutputDir[256];
     strncpy(baseOutputDir, usersOutputDir, sizeof(baseOutputDir) - 1);
@@ -142,17 +142,17 @@ int main(int argc, char* argv[]) {
 
     if (stat(baseOutputDir, &info) == 0) { // Directory exists
         if (!(info.st_mode & S_IFDIR)) { // It's not a directory
-            std::cerr << "Указанный путь \"" << baseOutputDir << "\" не является директорией!" << std::endl;
+            std::cerr << "The specified path \"" << baseOutputDir << "\" is not a directory!" << std::endl;
             return 1;
         }
     } else { // Directory does not exist, create it
         if (mkdir(baseOutputDir, 0777) != 0) {
-            std::cerr << "Ошибка создания заданной выходной директории \"" << baseOutputDir << "\"!" << std::endl;
+            std::cerr << "Error creating the specified output directory \"" << baseOutputDir << "\"!" << std::endl;
             return 1;
         }
     }
 
-    // Извлечение имени файла из inputFile (без пути и расширения)
+    // Extract filename from inputFile (without path and extension)
     std::string inputFilePathStr(inputFile);
     size_t lastSlashPos = inputFilePathStr.find_last_of("/\\");
     std::string filenameWithExtension = (lastSlashPos == std::string::npos) ? inputFilePathStr : inputFilePathStr.substr(lastSlashPos + 1);
@@ -160,7 +160,7 @@ int main(int argc, char* argv[]) {
     size_t lastDotPos = filenameWithExtension.find_last_of('.');
     std::string filenameWithoutExtension = (lastDotPos == std::string::npos) ? filenameWithExtension : filenameWithExtension.substr(0, lastDotPos);
 
-    // Создание полного пути для новой поддиректории
+    // Create full path for the new subdirectory
     std::string currentSpecificOutputDirName = filenameWithoutExtension;
     char specificOutputDir[512]; // Buffer for the final path
     int count = 0;
@@ -182,22 +182,22 @@ int main(int argc, char* argv[]) {
             if (info_sub.st_mode & S_IFDIR) { // It's a directory
                 count++; // Increment count to try next suffix
             } else { // It's a file, not a directory
-                std::cerr << "Путь \"" << specificOutputDir << "\" не является директорией!" << std::endl;
+                std::cerr << "The path \"" << specificOutputDir << "\" is not a directory!" << std::endl;
                 return 1; // Critical error, cannot proceed
             }
         }
     }
 
-    // Создание специфичной поддиректории для выходных файлов
+    // Create specific subdirectory for output files
     if (mkdir(specificOutputDir, 0777) != 0) {
-        std::cerr << "Ошибка создания директории для файла \"" << filenameWithoutExtension << "\" по пути \"" << specificOutputDir << "\"!" << std::endl;
+        std::cerr << "Error creating directory for file \"" << filenameWithoutExtension << "\" at path \"" << specificOutputDir << "\"!" << std::endl;
         return 1;
     }
 
-    //инициализация песчаной кучи
+    // Initialize sandpile
     Sandpile model(inputFile);
 
-    //начальное состояние пикселей в куче
+    // Initial state of pixels in the sandpile
     if (freq != 0) {
         char initialFilename[256];
         snprintf(initialFilename, sizeof(initialFilename), "%s/state_0.bmp", specificOutputDir);
@@ -206,16 +206,16 @@ int main(int argc, char* argv[]) {
 
     if (isMaxIter) {
         for (int iter = 1; iter <= maxIter; ++iter) {
-            model.update();//обновление состояния модели
+            model.update(); // Update model state
 
-            //если требуется - создание файла с текущим состоянием
+            // If required, create file with current state
             if (freq > 0 && iter % freq == 0) {
                 char filename[256];
                 snprintf(filename, sizeof(filename), "%s/state_%d.bmp", specificOutputDir, iter);
                 saveBMP(model, filename, color0, color1, color2, color3, color4);
             }
 
-            //если песчаная куча устойчива - прервыаем цикл
+            // If sandpile is stable, break the loop
             if (model.isStable()) {
                 break;
             }
@@ -223,9 +223,9 @@ int main(int argc, char* argv[]) {
     } else {
         int iter = 1;
         while (!model.isStable()) {
-            model.update();//обновление состояния модели
+            model.update(); // Update model state
 
-            //если требуется - создание файла с текущим состоянием
+            // If required, create file with current state
             if (freq > 0 && iter % freq == 0) {
                 char filename[256];
                 snprintf(filename, sizeof(filename), "%s/state_%d.bmp", specificOutputDir, iter);
@@ -236,7 +236,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    //финальное состояние 
+    // Final state
     char finalFilename[256];
     snprintf(finalFilename, sizeof(finalFilename), "%s/final_state.bmp", specificOutputDir);
     saveBMP(model, finalFilename, color0, color1, color2, color3, color4);
