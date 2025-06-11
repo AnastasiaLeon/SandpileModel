@@ -166,11 +166,15 @@ Example input files are located in the inputExamples directory, and their corres
 
 (All color arguments are set to default values.) 
 
+![Final state)](https://raw.githubusercontent.com/AnastasiaLeon/SandpileModel/refs/heads/main/outputDir/sandpileFive10K/final_state.bmp)
+
 2. Running for sandpileFive10K.tsv:
 
 ```./SandpileModel -i ../inputExamples/sandpileFive10K -o ../outputDir -f 10000 -c0 beige -c1 maroon -c2 red -c3 pink```
 
 (All color arguments except for -c4 (--color4) are specified; -c4 is set to its default state.)
+
+![Final state)](https://raw.githubusercontent.com/AnastasiaLeon/SandpileModel/refs/heads/main/outputDir/sandpile100K/final_state.bmp)
 
 ## Notes
 
