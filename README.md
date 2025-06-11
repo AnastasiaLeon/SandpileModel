@@ -7,7 +7,7 @@ This project implements a simplified version of the Abelian Sandpile Model, a ce
 
 The Abelian Sandpile Model, also known as the Bak-Tang-Wiesenfeld model, is a mathematical model used to study self-organized criticality. It simulates a grid where each cell can hold a certain number of "sand grains." When a cell contains more than a specific threshold of grains (typically 4), it becomes unstable and "topples," distributing one grain to each of its four neighboring cells. This process can trigger further topplings, leading to avalanches that propagate across the grid. The model is notable for its Abelian property, meaning the final stable state is independent of the order in which topplings occur. The sandpile model is widely studied in fields like physics, mathematics, and computer science due to its emergent complex patterns and critical behavior.
 
-![Example of concluding state of sandpile with input (0 0 300000)](https://raw.githubusercontent.com/AnastasiaLeon/SandpileModel/refs/heads/main/outputDir/sandpile300K/final_state.bmp)
+[Example of concluding state of sandpile with input (0 0 300000)]()
 
 
 ## Features
@@ -166,7 +166,7 @@ Example input files are located in the inputExamples directory, and their corres
 
 (All color arguments are set to default values.) 
 
-![Final state)](https://raw.githubusercontent.com/AnastasiaLeon/SandpileModel/refs/heads/main/outputDir/sandpile300K/final_state.bmp)
+[Final state)]()
 
 2. Running for sandpile100K.tsv:
 
@@ -174,7 +174,7 @@ Example input files are located in the inputExamples directory, and their corres
 
 (All color arguments are specified) 
 
-![Final state)](https://raw.githubusercontent.com/AnastasiaLeon/SandpileModel/refs/heads/main/outputDir/sandpile100K/final_state.bmp)
+[Final state)]()
 
 3. Running for sandpileFive10K.tsv:
 
@@ -182,7 +182,7 @@ Example input files are located in the inputExamples directory, and their corres
 
 (All color arguments except for -c4 (--color4) are specified; -c4 is set to its default state.)
 
-![Final state)](https://raw.githubusercontent.com/AnastasiaLeon/SandpileModel/refs/heads/main/outputDir/sandpileFive10K/final_state.bmp)
+[Final state)]()
 
 ## Notes
 
